@@ -265,9 +265,9 @@ def build_prompt(ws: Path, task: Task) -> tuple[str, str]:
             f"Module listing (path :: description):\n{listing}\n\n"
             f"Current content of {task.path}:\n"
             f"```text\n{current}```\n\n"
-            "Return only the complete new file content inside one fenced code\n"
-            "block. Keep everything outside the modules:start/modules:end\n"
-            "markers unchanged."
+            f"Return the complete new file content between a line {CONTENT_SENTINELS[0]}\n"
+            f"and a line {CONTENT_SENTINELS[1]}. Keep everything outside the\n"
+            "modules:start/modules:end markers unchanged. No commentary."
         )
     else:
         lang = "text" if task.path.endswith(".md") else "python"
@@ -278,10 +278,31 @@ def build_prompt(ws: Path, task: Task) -> tuple[str, str]:
             f"INSTRUCTION {task.instruction}\n\n"
             f"Current content of {task.path}:\n"
             f"```{lang}\n{current}```\n\n"
-            "Return only the complete new file content inside one fenced code\n"
-            "block. Do not add commentary."
+            f"Return the complete new file content between a line {CONTENT_SENTINELS[0]}\n"
+            f"and a line {CONTENT_SENTINELS[1]}. No commentary."
         )
     return prompt, current
+
+
+CONTENT_SENTINELS = ("BEGIN_CONTENT", "END_CONTENT")
+
+
+def extract_content(raw: str) -> str:
+    """Extract the new file content from a backend response.
+
+    Prefers sentinel-delimited content, falls back to the last fenced block.
+    A stray single language word on the first line of a fence is dropped.
+    """
+    m = re.search(
+        CONTENT_SENTINELS[0] + r"\r?\n(.*?)\r?\n?" + CONTENT_SENTINELS[1], raw, re.S
+    )
+    if m:
+        return m.group(1)
+    blocks = re.findall(r"```[a-z]*\n(.*?)```", raw, re.S)
+    text = blocks[-1] if blocks else raw
+    if text.splitlines() and re.fullmatch(r"[a-z]+", text.splitlines()[0].strip() or "x"):
+        text = text.split("\n", 1)[1] if "\n" in text else text
+    return text
 
 
 # -------------------------------------------------------------- backends ---
@@ -367,8 +388,7 @@ class LLMBackend:
             extra_body=extra,
         )
         content = resp.choices[0].message.content or ""
-        blocks = re.findall(r"```[a-z]*\n(.*?)```", content, re.S)
-        text = blocks[-1] if blocks else content
+        text = extract_content(content)
         usage = getattr(resp, "usage", None)
         return Completion(
             text,

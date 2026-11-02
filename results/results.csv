@@ -1,0 +1,4 @@
+run,backend,model,decision_calls,model_calls,prompt_tokens,completion_tokens,tokens,wall_seconds,guard_misses,reused,tasks
+cold,llm,glm-4.5-flash,4,4,703,389,1092,35.865,0,0,4
+warm,llm,glm-4.5-flash,0,0,0,0,0,0.078,0,4,4
+drill,llm,glm-4.5-flash,1,1,184,109,293,8.262,1,1,2

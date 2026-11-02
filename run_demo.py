@@ -17,6 +17,7 @@ from __future__ import annotations
 import argparse
 import csv
 import sys
+import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -90,8 +91,10 @@ def main() -> int:
     utils.write_text(utils.read_text(encoding="utf-8") + "# manual edit after warm run\n", encoding="utf-8")
     drill = RunStats(label="drill", backend=backend.name)
     t = TASKS[0]
+    _start = time.perf_counter()
     run_task(ws, cache, backend, t, drill)
     run_task(ws, cache, backend, t, drill)  # second pass must reuse again
+    drill.wall_seconds = time.perf_counter() - _start
     print(f"  [drill] rerun after manual edit of {t.path}: "
           f"{drill.guard_misses} guard miss, {drill.decision_calls} fresh decision, "
           f"{drill.reused} reuse")
