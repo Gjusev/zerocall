@@ -7,7 +7,9 @@
 ![tests](https://img.shields.io/badge/tests-16%20passing-2ea44f)
 ![license MIT](https://img.shields.io/badge/license-MIT-blue)
 
-![zerocall demo](assets/zerocall.gif)
+<a href="assets/zerocall.mp4"><img src="assets/zerocall.gif" alt="zerocall in 12 seconds: cold run 4 model calls, warm rerun 0, a guard catches an edited file" width="100%"></a>
+
+<sub>12 s, no sound. Click for the MP4.</sub>
 
 zerocall is a small Python library for tool-using agents. It stores each decision under a context signature, pins it with guards, and replays it only while every guard still holds. If the environment drifts, the guard fails and the agent decides again, so you never get a stale replay.
 
@@ -20,19 +22,15 @@ zerocall is a small Python library for tool-using agents. It stores each decisio
 
 ## How it works
 
-```
-task ──> signature ──> lookup ──> every guard holds? ──yes──> replay stored action   (0 calls)
-                                         │
-                                         no
-                                         v
-                                 ask the model ──> apply ──> record(action, guards)
-```
+![How zerocall decides between replaying a stored decision and calling the model](assets/zerocall-flow.png)
 
 `signature(task, target, intent)` hashes what the agent is being asked to do. When a decision is recorded, guards pin the state it relied on, such as a file hash, a directory listing or an allowlisted check. On lookup every guard is re-evaluated against the live environment, and a single failure means the decision is not reused.
 
 ## Measured
 
 Run on 2026-11-02 with `py -3.12 run_demo.py` on Windows 11, backend `llm`, model `glm-4.5-flash` on `https://api.z.ai/api/paas/v4`. Tokens are the sum of the `prompt_tokens` and `completion_tokens` fields the API reported, real calls only. Raw numbers are in [`results/results.csv`](results/results.csv).
+
+![Cold run vs warm rerun: model calls 4 to 0, tokens 1092 to 0, wall time 35.86 s to 0.08 s](assets/zerocall-results.png)
 
 | Run | Model calls | Tokens | Wall time | Guard misses |
 | --- | ---: | ---: | ---: | ---: |
@@ -109,13 +107,14 @@ zerocall is a zero-training simplification of the decision reuse mechanism in "H
 
 ## Layout
 
-```
-src/zerocall/           the library (core.py, stdlib only)
-examples/repo_agent.py  fixture workspace, tasks, backends, agent loop
-run_demo.py             cold/warm/drill measurement harness
-tests/                  pytest suite, offline
-results/results.csv     raw numbers from the last demo run
-```
+| Path | What it holds |
+| --- | --- |
+| `src/zerocall/` | the library (`core.py`, stdlib only) |
+| `examples/repo_agent.py` | fixture workspace, tasks, backends, agent loop |
+| `run_demo.py` | cold/warm/drill measurement harness |
+| `tests/` | pytest suite, offline |
+| `results/results.csv` | raw numbers from the last demo run |
+| `assets/` | demo video, GIF and diagrams |
 
 ## Citation
 
