@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+examples/workspace/
+hermes_run.log
