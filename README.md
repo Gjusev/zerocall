@@ -123,7 +123,7 @@ Source paper:
 ```bibtex
 @misc{harnessmm2026,
   title         = {HarnessMM: Recursive Self-Improvement for Harness Token Efficiency},
-  author        = {{Tsinghua University and Microsoft Research Asia}},
+  author        = {Jiang, Yuhua and Xu, Chang and Gao, Feifei and Zhao, Li},
   year          = {2026},
   eprint        = {2610.32813},
   archivePrefix = {arXiv},
