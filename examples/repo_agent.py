@@ -18,7 +18,7 @@ import time
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from decision_cache import DecisionCache, Guard, signature
+from zerocall import DecisionCache, Guard, signature
 
 README_START = "<!-- modules:start -->"
 README_END = "<!-- modules:end -->"

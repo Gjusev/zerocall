@@ -1,4 +1,4 @@
-"""Core of decision-cache: a guarded decision store.
+"""Core of zerocall: a guarded decision store.
 
 record() stores an action under a context signature. lookup() returns the
 stored action plus the outcome of every guard. A cached decision is reusable

@@ -1,4 +1,4 @@
-# SPEC: decision-cache
+# SPEC: zerocall
 
 You are developing this project autonomously. Read this spec fully, make sensible decisions without asking questions, and record every non-obvious choice in DECISIONS.md. Do not modify anything outside this directory.
 
@@ -29,7 +29,7 @@ OpenAI-compatible endpoint, cheap flash-tier model. Get credentials however is a
 README.md
 SPEC.md (this file, keep unchanged)
 DECISIONS.md
-src/decision_cache/
+src/zerocall/
 examples/repo_agent.py
 results/results.csv
 RESULTS.md

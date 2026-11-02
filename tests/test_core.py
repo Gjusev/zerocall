@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from decision_cache import DecisionCache, Guard, evaluate_guard, signature
+from zerocall import DecisionCache, Guard, evaluate_guard, signature
 
 
 @pytest.fixture()
@@ -69,7 +69,7 @@ def test_command_guard_allowlist(ws):
 
 
 def test_dir_listing_guard(ws):
-    from decision_cache import Guard
+    from zerocall import Guard
 
     g = Guard.dir_listing_of(ws, ".", "*.py")
     assert evaluate_guard(g, ws).ok

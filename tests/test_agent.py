@@ -1,7 +1,7 @@
 """End-to-end agent tests with the offline scripted backend."""
 from pathlib import Path
 
-from decision_cache import DecisionCache
+from zerocall import DecisionCache
 from repo_agent import (
     TASKS,
     ScriptedBackend,
